@@ -27,7 +27,6 @@ def main():
 	global FPSCLOCK,DISPLAYSURF,WALL,visited,DISPLAY_HEIGHT,DISPLAY_HEIGHT
 	os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (300, 50)
 
-
 	pygame.init()
 	pygame.display.set_caption('Maze Generator')
 
@@ -50,7 +49,7 @@ def main():
 
 
 	# print(visited)
-
+	count=0
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.locals.QUIT: 	 # QUIT CONDITION
@@ -58,8 +57,15 @@ def main():
 				pygame.quit()
 				sys.exit()
 		recursiveBacktracker(0,0)
+		if count==0:
+			reInitialize()
+			count=1
 		pygame.display.update()
 		FPSCLOCK.tick(FPS)
+
+def reInitialize():
+	global visited
+	visited = [ [0 for i in range(noOfWalls-1)] for i in range(noOfWalls-1) ]
 
 
 def waitwithCurrentScreen(timeInmilliSecs):
@@ -94,10 +100,10 @@ def findWallCoordinates(xW,yW,code):
 		return(xL,yL,xL-1,yL)
 
 def colorCoordinates(xS,yS,code):
-	if code==1 or code==3: #upper or bottom
+	if code==1 or code==3: #upper or bottom	
 		pygame.draw.line(DISPLAYSURF,WHITE,(xS,yS),(xS+GAP_WIDTH-1,yS),1)
 	elif code==2 or code==4:	#left or right
-		pygame.draw.line(DISPLAYSURF,WHITE,(xS,yS),(xS,yS+GAP_WIDTH-1),1)
+		pygame.draw.line(DISPLAYSURF,WHITE,(xS,yS),(xS,yS+GAP_WIDTH),1)
 
 def checkIfvisisted(x1,y1,code):
 	"Checks if the upper/lower/right/left tile of x1,y1 is visited or not"
@@ -140,7 +146,6 @@ def recursiveBacktracker(x1,y1):
 		l.append(4)
 
 
-	print(l)
 	wallCode=random.choice(l)
 
 	#remove the wall corresponding to the wallCode obtained
@@ -152,8 +157,6 @@ def recursiveBacktracker(x1,y1):
 		isNotVisited = checkIfvisisted(x1,y1,i)
 		if not isNotVisited:
 			l.remove(i)
-
-	print(x1,y1,l)
 	if l==[]:
 		return
 
