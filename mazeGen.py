@@ -1,4 +1,4 @@
-import pygame,os,sys
+import pygame,os,sys,random
 from pygame.locals import *
 
 
@@ -7,13 +7,13 @@ from pygame.locals import *
 2-RIGHT WALL
 3-BOTTOM WALL
 4-LEFT WALL
-
 """
 
 WALL_WIDTH = 2 			#WALL WIDTH IN PIXELS
 GAP_WIDTH  = 10
 noOfWalls  = 25
 
+visited = [ [0 for i in range(noOfWalls-1)],[0 for i in range(noOfWalls-1)] ]
 BLACK   = (  0,   0,   0)
 WHITE	= (255, 255, 255)
 
@@ -24,7 +24,7 @@ mousex , mousey = 0 , 0
 FPS = 20
 
 def main():
-	global FPSCLOCK,DISPLAYSURF,WALL
+	global FPSCLOCK,DISPLAYSURF,WALL,visited
 	os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (300, 50)
 
 
@@ -45,9 +45,13 @@ def main():
 		pygame.draw.line(DISPLAYSURF,BLACK,(0,WALL+1),(DISPLAY_HEIGHT,WALL+1),1)
 		WALL = WALL + 2 + GAP_WIDTH
 
-	xtemp1,ytemp1,xtemp2,ytemp2 = findWallCoordinates(3,0,2)
+
+
+	xtemp1,ytemp1,xtemp2,ytemp2 = findWallCoordinates(23,0,2)
 	colorCoordinates(xtemp1,ytemp1,2)
 	colorCoordinates(xtemp2,ytemp2,2)
+
+	print(visited)
 
 	while True:
 		for event in pygame.event.get():
@@ -97,8 +101,22 @@ def colorCoordinates(xS,yS,code):
 	elif code==2 or code==4:	#left or right
 		pygame.draw.line(DISPLAYSURF,WHITE,(xS,yS),(xS,yS+GAP_WIDTH-1),1)
 
+def recursiceBacktracker(x,y):
+	visited[x][y]=1
+
+	l=[] #wallChoicesAvaliable
+	if y!=0:
+		l.append(1)
+	if x!=23:
+		l.append(2)
+	if y!=23:
+		l.append(3)
+	if x!=0:
+		l.append(4)
+	print(l)
+
+	wallCode=random.choice(l)
 	
-		
 
 
 
